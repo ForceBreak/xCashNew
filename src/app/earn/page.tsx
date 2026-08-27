@@ -4,8 +4,13 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, SlidersVertical } from 'lucide-react';
 import Pagination from '@/components/Pagination';
 import { Suspense } from 'react';
+import { getOffers } from '@/lib/data/offers';
+import { getUserIdFromHeaders } from '@/lib/auth';
 
-export default function EarnPage() {
+export default async function EarnPage() {
+  const userId = await getUserIdFromHeaders();
+  const offers = await getOffers(50, userId);
+
   return (
     <>
       <div className="flex items-center justify-between my-4 px-4 leading-none">
@@ -28,7 +33,7 @@ export default function EarnPage() {
         </div>
       </div>
       <Suspense fallback={<OffersSkeleton />}>
-        <Offers />
+        <Offers offers={offers}/>
       </Suspense>
     </>
   );

@@ -1,11 +1,12 @@
-import GameCard from '@/components/Offers/GameCard';
-import { getOffers } from '@/lib/data/offers';
-import type { Offer } from '@/lib/data/offers';
-import { getUserIdFromHeaders } from '@/lib/auth';
+'use client';
 
-export default async function Offers() {
-  const userId = await getUserIdFromHeaders();
-  const offers = await getOffers(50, userId);
+import GameCard from '@/components/Offers/GameCard';
+import type { Offer } from '@/lib/data/offers';
+import { useModal } from '@/providers/modal-provider';
+import GameModal from '@/components/Modals/GameModal';
+
+export default function Offers({ offers }: { offers: Offer[] }) {
+  const { openModal } = useModal();
 
   return (
     <>
@@ -18,6 +19,7 @@ export default async function Offers() {
                 payout={offer.payout}
                 icon={offer.thumbnail_url}
                 key={offer.id}
+                onClick={() => openModal(<GameModal offer={offer} />)}
               />
             );
           })

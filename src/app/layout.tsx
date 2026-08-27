@@ -6,6 +6,7 @@ import AppSidebar from '@/components/AppSidebar';
 import { cn } from '@/lib/utils';
 import { QueryProvider } from '@/providers/query-provider';
 import { AuthProvider } from '@/providers/auth-provider';
+import { ModalProvider } from '@/providers/modal-provider';
 import { Toaster } from '@/components/ui/sonner';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
@@ -41,17 +42,19 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body>
         <QueryProvider>
           <AuthProvider>
-            <div className="min-h-screen block sm:flex bg-gray-900 font-base text-base-gray-light pb-12 md:pb-0">
-              <AppSidebar />
-              <div className="flex flex-col flex-1 pb-12 sm:pb-0">
-                <AppHeader />
-                <main className="flex-1 overflow-y-auto p-4 w-full max-w-[1200px] mx-auto">
-                  {children}
-                </main>
+            <ModalProvider>
+              <div className="min-h-screen block sm:flex bg-gray-900 font-base text-base-gray-light pb-12 md:pb-0">
+                <AppSidebar />
+                <div className="flex flex-col flex-1 pb-12 sm:pb-0">
+                  <AppHeader />
+                  <main className="flex-1 overflow-y-auto p-4 w-full max-w-[1200px] mx-auto">
+                    {children}
+                  </main>
 
-                <Toaster />
+                  <Toaster />
+                </div>
               </div>
-            </div>
+            </ModalProvider>
           </AuthProvider>
         </QueryProvider>
       </body>

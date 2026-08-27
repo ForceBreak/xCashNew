@@ -5,17 +5,20 @@ export default function GameCard({
   payout,
   className,
   icon,
+  onClick,
 }: {
   name: string;
   payout: number;
   className?: string;
   icon: string;
+  onClick: () => void;
 }) {
   return (
     <div
       className={`relative p-3 rounded-lg bg-gray-950 cursor-pointer ${className}`}
+      onClick={onClick}
     >
-      <GameIcon icon={icon} rootClass={'h-28 w-full'}/>
+      <GameIcon icon={icon} rootClass={'h-28 w-full'} />
 
       <div
         v-if="props.game?.platforms?.length"
