@@ -6,6 +6,7 @@ import AppSidebar from '@/components/AppSidebar';
 import { cn } from '@/lib/utils';
 import { QueryProvider } from '@/providers/query-provider';
 import { AuthProvider } from '@/providers/auth-provider';
+import { Toaster } from '@/components/ui/sonner';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -47,6 +48,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
                 <main className="flex-1 overflow-y-auto p-4 w-full max-w-[1200px] mx-auto">
                   {children}
                 </main>
+
+                <Toaster />
               </div>
             </div>
           </AuthProvider>

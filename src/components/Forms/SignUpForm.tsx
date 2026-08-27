@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import {
   Field,
   FieldError,
@@ -11,6 +12,9 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { signInWithGoogle, signUpWithEmail } from '@/lib/auth-client';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const formSchema = z
   .object({
@@ -26,11 +30,8 @@ const formSchema = z
     path: ['confirmPassword'],
   });
 
-export default function SignUpForm({
-  action = () => {},
-}: {
-  action: (values: z.infer<typeof formSchema>) => void;
-}) {
+export default function SignUpForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,8 +41,22 @@ export default function SignUpForm({
     },
   });
 
+  const handleSignUp = async () => {
+    setIsLoading(true);
+
+    try {
+      const { email, password } = form.getValues();
+      await signUpWithEmail(email, password);
+      toast.success('Account created successfully');
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <form id="form-signin" onSubmit={form.handleSubmit(action)}>
+    <form id="form-signin" onSubmit={form.handleSubmit(handleSignUp)}>
       <FieldGroup>
         <Controller
           name="email"
@@ -106,14 +121,31 @@ export default function SignUpForm({
             type="button"
             variant="outline"
             size="lg"
+            disabled={isLoading}
             onClick={() => form.reset()}
           >
             Reset
           </Button>
-          <Button type="submit" form="form-signin" size="lg">
+          <Button
+            type="submit"
+            form="form-signin"
+            size="lg"
+            disabled={isLoading}
+          >
             Submit
           </Button>
         </Field>
+
+        <Separator />
+
+        <Button
+          type="button"
+          size="lg"
+          disabled={isLoading}
+          onClick={() => signInWithGoogle()}
+        >
+          Sign Up with Google
+        </Button>
       </FieldGroup>
     </form>
   );

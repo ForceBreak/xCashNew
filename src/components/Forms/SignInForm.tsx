@@ -12,19 +12,17 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { createClient } from '@/lib/supabase/client';
+import { signInWithGoogle, signInWithEmail } from '@/lib/auth-client';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   email: z.string().min(1, 'Email is required.').email('Invalid email address'),
   password: z.string().min(1, 'Password is required.'),
 });
 
-export default function SignInForm({
-  action = () => {},
-}: {
-  action: (values: z.infer<typeof formSchema>) => void;
-}) {
-  const supabase = createClient();
+export default function SignInForm() {
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,18 +32,21 @@ export default function SignInForm({
     },
   });
 
-  async function signInWithGoogle() {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        scopes: 'openid email profile',
-        redirectTo: `${location.origin}/auth/callback`,
-      },
-    });
-  }
+  const handleSignIn = async () => {
+    setIsLoading(true);
+
+    try {
+      const { email, password } = form.getValues();
+      await signInWithEmail(email, password);
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <form id="form-signin" onSubmit={form.handleSubmit(action)}>
+    <form id="form-signin" onSubmit={form.handleSubmit(handleSignIn)}>
       <FieldGroup>
         <Controller
           name="email"
@@ -89,19 +90,30 @@ export default function SignInForm({
             type="button"
             variant="outline"
             size="lg"
+            disabled={isLoading}
             onClick={() => form.reset()}
           >
             Reset
           </Button>
-          <Button type="submit" form="form-signin" size="lg">
+          <Button
+            type="submit"
+            form="form-signin"
+            size="lg"
+            disabled={isLoading}
+          >
             Submit
           </Button>
         </Field>
 
         <Separator />
 
-        <Button type="button" size="lg" onClick={() => signInWithGoogle()}>
-          Login with Google
+        <Button
+          type="button"
+          size="lg"
+          onClick={() => signInWithGoogle()}
+          disabled={isLoading}
+        >
+          Sign In with Google
         </Button>
       </FieldGroup>
     </form>
