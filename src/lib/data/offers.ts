@@ -54,18 +54,15 @@ export async function getOffers(
       .eq('user_id', userId)
       .in('offer_id', offerIdArray);
 
-    console.log(userOffers, offerIdArray, 'offerIdArray');
+    let presentUser = null;
+    const filtered = data.filter((offer) => {
+      presentUser = userOffers?.find(
+        (userOffer) => String(userOffer.offer_id) === String(offer.id),
+      );
+      return !presentUser?.status;
+    });
 
-    const mappedData = data.map((offer) => ({
-      ...offer,
-      status:
-        userOffers?.find((userOffer) => String(userOffer.offer_id) === String(offer.id))
-          ?.status || null,
-    }));
-
-    console.log(mappedData[0]);
-
-    return mappedData;
+    return filtered;
   } catch (error) {
     console.error('Failed to fetch offers:', error);
     return [];

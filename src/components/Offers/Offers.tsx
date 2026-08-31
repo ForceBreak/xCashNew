@@ -1,7 +1,7 @@
 'use client';
 
 import GameCard from '@/components/Offers/GameCard';
-import type { Offer } from '@/lib/data/offers';
+import { Offer } from '@/types/offer';
 import { useModal } from '@/providers/modal-provider';
 import GameModal from '@/components/Modals/GameModal';
 

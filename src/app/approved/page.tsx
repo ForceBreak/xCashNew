@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 
 export default async function StartedPage() {
   const userId = await getUserIdFromHeaders();
-  const offers = await getStartedOffers(userId, 'started');
+  const offers = await getStartedOffers(userId, 'approved');
 
   return (
     <>

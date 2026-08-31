@@ -8,6 +8,8 @@ export default function AppSidebar() {
   const routes = [
     { path: '/earn', name: 'Earn' },
     { path: '/started', name: 'Started' },
+    { path: '/approved', name: 'Approved' },
+    
   ];
   const pathname = usePathname();
 

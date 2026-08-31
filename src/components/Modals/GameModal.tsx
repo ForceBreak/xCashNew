@@ -1,4 +1,4 @@
-import type { Offer } from '@/lib/data/offers';
+import { Offer } from '@/types/offer';
 import ItemInfo from '@/components/ui/item-info';
 import { Button } from '@/components/ui/button';
 import { startOffer } from '@/actions/offers';

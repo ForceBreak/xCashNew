@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import type { Offer } from '@/lib/data/offers';
+import { Offer } from '@/types/offer';
 import { getUserIdFromHeaders } from '@/lib/auth';
 import { COINS_PER_DOLLAR } from '@/constants';
 
@@ -22,6 +22,9 @@ export async function startOffer(offer: Offer) {
       payout_usd: offer.payout,
       payout_coins: payoutCoins,
       tracking_url: offer.tracking_url,
+      network: offer.network,
+      requirements: offer.requirements,
+      description: offer.description,
       status: 'started',
     },
     { onConflict: 'offer_id' },

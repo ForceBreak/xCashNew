@@ -27,10 +27,10 @@ export default function AppHeader() {
           <>
             <span className="hidden md:flex items-center gap-3 h-10 px-4 rounded-lg font-base-bold leading-none bg-gray-750">
               <Banknote size={24} className="text-yellow-400" />
-              <span>${calculateUSD(user.balance_coins)}</span>
+              <span>$ {calculateUSD(user.balance_coins)}</span>
             </span>
             <span className="flex items-center gap-3 h-10 px-4 rounded-lg font-base-bold leading-none bg-gray-750">
-              <Coins size={20} className="text-yellow-400" />
+              <Coins size={20} className="text-yellow-400" />{' '}
               <span>{user.balance_coins}</span>
             </span>
 
