@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { useProfile } from '@/hooks/use-profile';
+import { useAuth } from '@/providers/auth-provider';
 
 export default function AppLogo() {
-  const { data: profile } = useProfile();
+  const { user } = useAuth();
 
   return (
-    <Link href={`${profile ? '/earn' : '/'}`} className="font-base text-4xl">
+    <Link href={`${user ? '/earn' : '/'}`} className="font-base text-4xl">
       xCash
     </Link>
   );

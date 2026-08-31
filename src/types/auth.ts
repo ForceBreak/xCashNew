@@ -1,9 +1,9 @@
 export interface User {
   id: string;
   email: string;
-  name: string | null;
-  avatarUrl: string | null;
-  role: 'user' | 'admin';
+  first_name: string | null;
+  last_name: string | null;
+  balance_coins: number;
 }
 
 export interface AuthSession {

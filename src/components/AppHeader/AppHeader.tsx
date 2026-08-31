@@ -4,11 +4,11 @@ import AppLogo from '@/components/AppLogo';
 import { Banknote, Coins } from 'lucide-react';
 import UserMenu from '@/components/AppHeader/UserMenu';
 import ModalSignIn from '@/components/Modals/SignIn';
-import { useProfile } from '@/hooks/use-profile';
+import { useAuth } from '@/providers/auth-provider';
 import { COINS_PER_DOLLAR } from '@/constants';
 
 export default function AppHeader() {
-  const { data: user, isLoading } = useProfile();
+  const { user } = useAuth();
   const calculateUSD = (balance_coins: number) =>
     (balance_coins / COINS_PER_DOLLAR).toFixed(2);
 
@@ -18,12 +18,7 @@ export default function AppHeader() {
         <AppLogo />
       </div>
       <div className="flex gap-5 items-center ml-auto">
-        {isLoading ? (
-          <div className="flex items-center gap-3 h-10 px-4 rounded-lg font-base-bold leading-none bg-gray-750 animate-pulse">
-            <div className="h-6 w-6 bg-gray-700 rounded animate-pulse"></div>
-            <div className="h-6 w-6 bg-gray-700 rounded animate-pulse"></div>
-          </div>
-        ) : user ? (
+        {user ? (
           <>
             <span className="hidden md:flex items-center gap-3 h-10 px-4 rounded-lg font-base-bold leading-none bg-gray-750">
               <Banknote size={24} className="text-yellow-400" />

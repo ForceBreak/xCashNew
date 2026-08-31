@@ -11,10 +11,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { LogoutButton } from '@/components/ui/logout-button';
-import { useProfile } from '@/hooks/use-profile';
+import { useAuth } from '@/providers/auth-provider';
+import { User as AuthUser } from '@/types/auth';
 
 export default function UserMenu() {
-  const { data: user } = useProfile();
+  const { user }: { user: AuthUser | null } = useAuth();
   const links = [{ text: 'View profile', to: '/profile', icon: 'user' }];
 
   return (
