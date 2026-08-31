@@ -18,6 +18,7 @@ export default function Offers({ offers }: { offers: Offer[] }) {
                 name={offer.name}
                 payout={offer.payout}
                 icon={offer.thumbnail_url}
+                status={offer.status}
                 key={offer.id}
                 onClick={() => openModal(<GameModal offer={offer} />)}
               />

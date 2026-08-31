@@ -1,3 +1,5 @@
+import { createClient } from '@/lib/supabase/server';
+
 export interface Offer {
   id: string;
   name: string;
@@ -7,6 +9,7 @@ export interface Offer {
   description: string;
   requirements: string;
   tracking_url: string;
+  status: 'started' | 'approved' | 'rejected' | null;
 }
 
 interface OffersResponse {
@@ -14,7 +17,7 @@ interface OffersResponse {
 }
 
 export async function getOffers(
-  limit = 50,
+  limit = 500,
   userId: string | null = null,
 ): Promise<Offer[]> {
   const token = process.env.OFFERWALL_API_TOKEN;
@@ -41,7 +44,28 @@ export async function getOffers(
     }
 
     const json = (await res.json()) as OffersResponse;
-    return Array.isArray(json.data) ? json.data : [];
+    const data = Array.isArray(json.data) ? json.data : [];
+    const offerIdArray = data.map((offer) => offer.id);
+
+    const supabase = await createClient();
+    const { data: userOffers } = await supabase
+      .from('user_offers')
+      .select('offer_id,status')
+      .eq('user_id', userId)
+      .in('offer_id', offerIdArray);
+
+    console.log(userOffers, offerIdArray, 'offerIdArray');
+
+    const mappedData = data.map((offer) => ({
+      ...offer,
+      status:
+        userOffers?.find((userOffer) => String(userOffer.offer_id) === String(offer.id))
+          ?.status || null,
+    }));
+
+    console.log(mappedData[0]);
+
+    return mappedData;
   } catch (error) {
     console.error('Failed to fetch offers:', error);
     return [];
