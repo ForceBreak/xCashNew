@@ -1,11 +1,16 @@
 import { createClient } from '@/lib/supabase/server';
+import { cacheTag, cacheLife } from 'next/cache';
 import { Offer } from '@/types/offer';
 
-export async function getStartedOffers(
+export async function getOffersByStatus(
   userId: string | null = null,
   status: string,
 ): Promise<Offer[]> {
   try {
+    ('use cache');
+    cacheLife('minutes');
+    cacheTag('offers', `offers-${status}`, `offers-user-${userId}`);
+
     const supabase = await createClient();
     const { data: userOffers } = await supabase
       .from('user_offers')
@@ -33,3 +38,6 @@ export async function getStartedOffers(
     return [];
   }
 }
+
+export const revalidate = 900;
+export const tags = ['offers'];
